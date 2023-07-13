@@ -1,5 +1,6 @@
 
   <h1>MERN STACK OB</h1>
+  <h2>Act #1</h2>
   <p>Este es un archivo README que describe las dependencias, comandos de instalación y variables de entorno necesarios para el proyecto.</p>
 
   <h2>Dependencias</h2>
