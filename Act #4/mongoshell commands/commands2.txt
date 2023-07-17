@@ -1,0 +1,62 @@
+db.Contacts.find({"location.city" : {$regex: /^A/}}).limit(5)
+db.Contacts.aggregate([
+  {
+    $match: {
+      "location.country": "France",
+      "registered.age": { $gte: 18, $lte: 50 }
+    }
+  },
+  {
+    $out: "france_contacts"
+  }
+])
+db.Contacts.updateMany({}, {$set : {"favorite_number" : "22-55-33-44"}})
+db.Contacts.aggregate([
+  {
+    $bucket: {
+      groupBy: { $toInt: { $substrCP: ["$favorite_number", 0, 2] } },
+      boundaries: [0, 20, 40, 60, 80],
+      default: "Other",
+      output: {
+        count: { $sum: 1 }
+      }
+    }
+  }
+])
+db.Contacts.find({}, {"name.first":1 , "login.username":1})
+db.Contacts.aggregate([
+  {
+    $group: {
+      _id: "$name.first",
+      last: { $first: "$name.last" }
+    }
+  }
+])
+db.Contacts.aggregate([
+  {
+    $unwind: "$name"
+  },
+  {
+    $group: {
+      _id: "$name.first", 
+      first_name: { $first: "$name.first" }, 
+      last_name: { $first: "$name.last" } 
+    }
+  },
+  {
+    $sort: {
+      last_name: 1 
+    }
+  }
+])
+db.Contacts.aggregate([
+  {
+    $project: {
+      _id: 0, 
+      name: 1, 
+      fechaNacimiento: { $dateToString: { format: "%d-%m-%Y", date: "$registered.date" } }
+     
+    }
+  }
+])
+
