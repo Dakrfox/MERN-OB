@@ -1,0 +1,12 @@
+use pruebas
+db.Contacts.find()
+db.Contacts.findOne({"location.country": "Germany"})
+db.Contacts.find ({"name.first":"blake"})
+db.Contacts.find ({"gender":"male"}).limit(5)
+db.Contacts.find ().limit(4).sort({"name":-1})
+db.createCollection("CopiaContacts")
+db.Contacts.aggregate([{$out: "CopiaContacts"}])
+db.CopiaContacts.drop()
+db.Contacts.updateMany({}, {$rename: {"name": "nombre"}}, false, true)
+db.Contacts.deleteMany({ "location.state": "Florida" })
+
